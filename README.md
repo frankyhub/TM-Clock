@@ -20,6 +20,6 @@ Internetuhr mit AP für die WLAN-Daten
 ## Story
 Das Repo beinhaltet eine Uhr mit Internetzeit, Sommer/Winterzeitumstellung. Die Zeitanzeige erfolgt über ein 4-Digit TM1637 Display. 
 
-Für die Einstellung der WLAN-Daten steht ein WLAN-Manager zur Verfügung. Nachdem in den Netzwerkeinstellungen des Handys/Tablet die "TM-Clock" ausgewählt wurde, kann über die IP-Adresse 192.168.4.1 der WLAN-Manger gestartet und die WLAN-Zugangsdaten eingetragen werden. Sind die WLAN-Zugangsdaten korrekt, startet Claudya automatisch. Über die angezeigte IP-Adresse im OLED-Display ist der WEB-Server aufrufbar. Die Einstellungen sind jetzt über den WEB-Server möglich.
+Für die Einstellung der WLAN-Daten steht ein WLAN-Manager zur Verfügung. Nachdem in den Netzwerkeinstellungen des Handys/Tablet die "TM-Clock" ausgewählt wurde, kann über die IP-Adresse 192.168.4.1 der WLAN-Manger gestartet und die WLAN-Zugangsdaten eingetragen werden. Sind die WLAN-Zugangsdaten korrekt, startet die TM-Clock automatisch. 
 
 

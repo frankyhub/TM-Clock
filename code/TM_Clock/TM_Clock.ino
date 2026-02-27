@@ -26,10 +26,7 @@
   3. Verbinde dich mit dem "TM-Clock" WLAN und gebe 192.168.4.1 in der Adresszeile deines Webbrowsers ein (KEINE WEB/GOOGLE SUCHE)
   4. Du solltest jetzt ein Webinterface sehen in dem du den Namen und das Passwort deines Heimnetzwerks eingeben kannst
   5. Wenn du jetzt "Speichern" drückst, sollte sich deine Cloudya mit deinem Heimnetzwerk verbinden
-  6. Die IP Adresse wird nach dem Reboot im OLED Display und im Seriellen Monitor angezeigt.
-  7. Du kannst jetzt das Webinterface zur Steuerung des Lichts etc. aufrufen indem du die IP Adresse deiner Cloudya in der Adresszeile deines Webbrowsers eingibst.
-
-
+  
   ### Electronik Verbindungen
   4-stellige LED 0.56 Display: CLK an D18, DIO an D5, 5V an 5V, GND an GND
 
@@ -177,3 +174,4 @@ void loop() {
 
   delay(500);
 }
+

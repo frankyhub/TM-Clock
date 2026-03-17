@@ -25,7 +25,7 @@ Für die Einstellung der WLAN-Daten steht ein WLAN-Manager zur Verfügung. Nachd
 
 ![pic](/pic/TM-Uhr.png)
 
-![pic](/pic/es32.JPG)
+![pic](/pic/esp32.JPG)
 
 
 

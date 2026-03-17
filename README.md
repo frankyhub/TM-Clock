@@ -23,3 +23,7 @@ Das Repo beinhaltet eine Uhr mit Internetzeit, Sommer/Winterzeitumstellung. Die 
 Für die Einstellung der WLAN-Daten steht ein WLAN-Manager zur Verfügung. Nachdem in den Netzwerkeinstellungen des Handys/Tablet die "TM-Clock" ausgewählt wurde, kann über die IP-Adresse 192.168.4.1 der WLAN-Manger gestartet und die WLAN-Zugangsdaten eingetragen werden. Sind die WLAN-Zugangsdaten korrekt, startet die TM-Clock automatisch. 
 
 
+![pic](/pic/TM-UHr.png)
+
+
+

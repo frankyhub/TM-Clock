@@ -26,11 +26,9 @@ c=3;
 b= b1<c ? 3 : b1;
 
 
-
 print_part();
 
-
-
+ 
 module print_part() 
  {
 	if (part == "1") { 
@@ -38,12 +36,12 @@ module print_part()
         difference() {
 		Box();
                                     
-            
+           
 //Durchbruch Spannungsversorgung
-            translate(v = [36, 0, 20])
-            cube(size = [10,5,19.5], center=true);
-            
-            
+rotate([90,0,90] ){ 
+translate(v = [-30, -10, 30])
+cylinder(h = 15, r1 = 2.5, r2 = 2.5);
+}           
                                     //Durchbruch USB
             //translate(v = [-15, -50, -13.7])
             //cube(size = [25,11,6], center=true);
@@ -51,7 +49,7 @@ module print_part()
                                                 //Durchbruch Siebesegment-Anzeige
             rotate([90, 90, 0]) {         
             translate(v = [-1, -38, 0])
-            cube(size = [21.2,21,50.7], center=true);
+            cube(size = [20.5,21,50.5], center=true);
             }
             
 

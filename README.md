@@ -23,9 +23,30 @@ Das Repo beinhaltet eine Uhr mit Internetzeit, Sommer/Winterzeitumstellung. Die 
 Für die Einstellung der WLAN-Daten steht ein WLAN-Manager zur Verfügung. Nachdem in den Netzwerkeinstellungen des Handys/Tablet die "TM-Clock" ausgewählt wurde, kann über die IP-Adresse 192.168.4.1 der WLAN-Manger gestartet und die WLAN-Zugangsdaten eingetragen werden. Sind die WLAN-Zugangsdaten korrekt, startet die TM-Clock automatisch. 
 
 
-![pic](/pic/TM-Uhr.png)
+![pic](/pic/TM3.png)
 
-![pic](/pic/esp32.JPG)
+
+
+## Montage
+
+### Den ESP32 auf den Gehäusedeckel kleben (Verwende den PIN5x5)
+![pic](/pic/TM1.JPG)
+
+### Das Display in den Durchbruch kleben (Verwende den PIN-TM)
+![pic](/pic/TM2.JPG)
+
+
+
+  ## Inbetriebnahme:
+
+  1. Versorge deine TM-Clock mit Strom
+  2. Warte bis "TM-Clock" in den WLAN-Verbindungen (Einstellungen, WLAN, Meine Netzwerke)
+  3. Verbinde dich mit dem "TM-Clock" WLAN und gebe 192.168.4.1 in der Adresszeile deines Webbrowsers ein (KEINE WEB/GOOGLE SUCHE)
+  4. Du solltest jetzt ein Webinterface sehen in dem du den Namen und das Passwort deines Heimnetzwerks eingeben kannst
+  5. Wenn du jetzt "Speichern" drückst, sollte sich deine Cloudya mit deinem Heimnetzwerk verbinden
+  6. Die TM-Clock startet jetzt
+
+
 
 
 

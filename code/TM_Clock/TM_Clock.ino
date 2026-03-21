@@ -1,177 +1,179 @@
 /*************************************************************************************************
                                       PROGRAMMINFO
 **************************************************************************************************
-                                     TM-CLOCK 
-  Funktion: Uhrzeit über 4 Digit Display, 
- 
-**************************************************************************************************
-  Version: 27.02.2026   Github TM-Clock 
-  
-  ---------------------------------------------------------------
+Funktion: TM-Clock, Internetzeit Abruf, WLAN-Manager, WLAN-Daten im SPIFFS gespeichert
 
-*************************************************************************************************
-  Board: ESP32vn IoT UNO Board Version 1.0.6!
 **************************************************************************************************
-  C++ Arduino IDE V1.8.19
+Version: 21.03.2026
 **************************************************************************************************
-  Einstellungen:
-  https://dl.espressif.com/dl/package_esp32_index.json
-  http://dan.drown.org/stm32duino/package_STM32duino_index.json
-  https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_dev_index.json
+Board: ESP32vn IoT UNO
 **************************************************************************************************
-  Inbetriebnahme:
+Libraries:
+https://github.com/espressif/arduino-esp32/tree/master/libraries
+C:\Users\User\Documents\Arduino
+D:\gittemp\Arduino II\A156_Wetterdaten_V3
+**************************************************************************************************
+C++ Arduino IDE V1.8.19
 
-  1. Versorge deine TM-Clock mit Strom
-  2. Warte bis das "TM-Clock" WLAN erscheint (Einstellungen, WLAN, Meine Netzwerke)
-  3. Verbinde dich mit dem "TM-Clock" WLAN und gebe 192.168.4.1 in der Adresszeile deines Webbrowsers ein (KEINE WEB/GOOGLE SUCHE)
-  4. Du solltest jetzt ein Webinterface sehen in dem du den Namen und das Passwort deines Heimnetzwerks eingeben kannst
-  5. Wenn du jetzt "Speichern" drückst, sollte sich deine Cloudya mit deinem Heimnetzwerk verbinden
-  
-  ### Electronik Verbindungen
-  4-stellige LED 0.56 Display: CLK an D18, DIO an D5, 5V an 5V, GND an GND
-
- **************************************************************************************************/
+**************************************************************************************************
+Einstellungen:
+https://dl.espressif.com/dl/package_esp32_index.json
+http://dan.drown.org/stm32duino/package_STM32duino_index.json
+http://arduino.esp8266.com/stable/package_esp8266com_index.json
+**************************************************************************************************/
 #include <WiFi.h>
-#include <ESPAsyncWebServer.h>
-#include <AsyncTCP.h>
-#include <SPIFFS.h>
+#include <WebServer.h>
 #include <TM1637Display.h>
-#include <NTPClient.h>
-#include <WiFiUdp.h>
+#include <time.h>
+#include <FS.h>
+#include <SPIFFS.h>
 
-// TM1637 Pins
 #define CLK 18
 #define DIO 5
 TM1637Display display(CLK, DIO);
 
-// Access Point Daten
-const char* apName = "TM-Clock";
-const char* apPass = "";
+WebServer server(80);
 
-// NTP
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org", 3600);
+const char* ntpServer = "pool.ntp.org";
+const long gmtOffset_sec = 0;     // 3600 z. B. MEZ = +1 h
+const int daylightOffset_sec = 3600; // Sommerzeit
 
-// Speicherung
-String ssid = "";
-String password = "";
+String ssid;
+String password;
 
-// Server
-AsyncWebServer server(80);
+// ----------------------------------------------------------------
+// Hilfsfunktionen für SPIFFS
+// ----------------------------------------------------------------
+void saveCredentials(const String& ssid, const String& password) {
+  File file = SPIFFS.open("/wifi.txt", FILE_WRITE);
+  if(!file) {
+    Serial.println("Fehler beim Speichern der WLAN Daten!");
+    return;
+  }
+  file.println(ssid);
+  file.println(password);
+  file.close();
+}
 
-// Prüfen ob Wifi Daten existieren
-bool loadWifiData() {
-  if (!SPIFFS.exists("/wifi.txt")) return false;
-
-  File f = SPIFFS.open("/wifi.txt", "r");
-  ssid = f.readStringUntil('\n');
-  password = f.readStringUntil('\n');
+bool loadCredentials(String& ssid, String& password) {
+  File file = SPIFFS.open("/wifi.txt");
+  if(!file) {
+    Serial.println("Keine WLAN Daten vorhanden.");
+    return false;
+  }
+  ssid = file.readStringUntil('\n');
+  password = file.readStringUntil('\n');
   ssid.trim();
   password.trim();
-  f.close();
-  return true;
+  file.close();
+  return (ssid.length() > 0);
 }
 
-// Wifi Daten speichern
-void saveWifiData(String s, String p) {
-  File f = SPIFFS.open("/wifi.txt", "w");
-  f.println(s);
-  f.println(p);
-  f.close();
-}
-
-  // HTML-Formular für die WLAN-Eingabe
-  const char *htmlForm = R"(
-  <!DOCTYPE html>
-  <html lang="de">
-  <head>
-    <meta charset="UTF-8">
-    <title>WLAN Konfiguration</title>
-    <style>
-      body { font-family: Arial, sans-serif; text-align: center; }
-      input { padding: 10px; margin: 10px; font-size: 18px; }
-      button { padding: 10px 20px; font-size: 18px; cursor: pointer; }
-    </style>
-  </head>
-  <body>
-    <h2>Geben Sie die WLAN-Daten ein</h2>
-    <form action="/configure" method="POST">
-      <label for="ssid">SSID:</label><br>
-      <input type="text" id="ssid" name="ssid" required><br><br>
-      <label for="password">Passwort:</label><br>
-      <input type="password" id="password" name="password" required><br><br>
-      <button type="submit">Speichern und verbinden</button>
+// ----------------------------------------------------------------
+// Webserver zum Einstellen der WLAN-Daten
+// ----------------------------------------------------------------
+void handleRoot() {
+  String html = R"rawliteral(
+    <html>
+    <body style='font-family:sans-serif;text-align:center;'>
+    <h2>ESP32 WLAN Konfiguration</h2>
+    <form action="/save" method="post">
+      SSID:<br><input name="ssid"><br>
+      Passwort:<br><input name="pass" type="password"><br><br>
+      <input type="submit" value="Speichern & Neustarten">
     </form>
-  </body>
-  </html>
-  )";
+    </body>
+    </html>
+  )rawliteral";
+  server.send(200, "text/html", html);
+}
 
-void startAPMode() {
-  WiFi.mode(WIFI_AP);
-  WiFi.softAP(apName, apPass);
-  Serial.println("AP gestartet: " + WiFi.softAPIP().toString());
+void handleSave() {
+  ssid = server.arg("ssid");
+  password = server.arg("pass");
+  saveCredentials(ssid, password);
+  server.send(200, "text/html", "<h3>Gespeichert! Neustart...</h3>");
+  delay(2000);
+  ESP.restart();
+}
 
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(200, "text/html", htmlForm);
-  });
-
-  server.on("/save", HTTP_GET, [](AsyncWebServerRequest *request){
-    if (request->hasParam("ssid") && request->hasParam("pass")) {
-      saveWifiData(
-        request->getParam("ssid")->value(),
-        request->getParam("pass")->value()
-      );
-      request->send(200, "text/html", "Gespeichert! Neustart...");
-      delay(1500);
+// ----------------------------------------------------------------
+// WLAN-Verbindung aufbauen oder Webserver starten
+// ----------------------------------------------------------------
+void connectWiFi() {
+  if (!loadCredentials(ssid, password)) {
+    WiFi.mode(WIFI_AP);
+    WiFi.softAP("TM-Clock");
+    IPAddress IP = WiFi.softAPIP();
+    Serial.print("AP gestartet. IP: ");
+    Serial.println(IP);
+    server.on("/", handleRoot);
+    server.on("/save", HTTP_POST, handleSave);
+    server.begin();
+    while (true) {
+      server.handleClient();
+      delay(10);
+    }
+  } else {
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid.c_str(), password.c_str());
+    Serial.printf("Verbinde mit %s", ssid.c_str());
+    int retry = 0;
+    while (WiFi.status() != WL_CONNECTED && retry < 20) {
+      delay(1000);
+      Serial.print(".");
+      retry++;
+    }
+    if (WiFi.status() == WL_CONNECTED) {
+      Serial.println("\nWLAN verbunden!");
+    } else {
+      Serial.println("\nKeine Verbindung. Öffne Setup-Modus...");
+      SPIFFS.remove("/wifi.txt");
       ESP.restart();
     }
-  });
-
-  server.begin();
+  }
 }
 
+// ----------------------------------------------------------------
+// NTP Synchronisierung
+// ----------------------------------------------------------------
+void initTime() {
+  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+  Serial.println("Zeit wird synchronisiert...");
+  struct tm timeinfo;
+  if(!getLocalTime(&timeinfo)) {
+    Serial.println("Zeit konnte nicht abgerufen werden.");
+    return;
+  }
+  Serial.println(&timeinfo, "Aktuelle Zeit: %H:%M:%S");
+}
+
+// ----------------------------------------------------------------
+// Arduino Setup / Loop
+// ----------------------------------------------------------------
 void setup() {
   Serial.begin(115200);
-  SPIFFS.begin(true);
-  display.setBrightness(1);
-
-  if (!loadWifiData()) {
-    Serial.println("Keine WLAN-Daten -> AP Mode");
-    startAPMode();
+  if(!SPIFFS.begin(true)) {
+    Serial.println("SPIFFS konnte nicht gestartet werden!");
     return;
   }
 
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid.c_str(), password.c_str());
-  Serial.println("Verbinde mit WLAN...");
+  display.setBrightness(0);
+  display.clear();
 
-  unsigned long startAttempt = millis();
-  while (WiFi.status() != WL_CONNECTED && millis() - startAttempt < 15000) {
-    delay(200);
-  }
-
-  if (WiFi.status() != WL_CONNECTED) {
-    Serial.println("WLAN fehlgeschlagen -> AP Mode");
-    startAPMode();
-    return;
-  }
-
-  Serial.println("WLAN verbunden: " + WiFi.localIP().toString());
-
-  timeClient.begin();
+  connectWiFi();
+  initTime();
 }
 
 void loop() {
   if (WiFi.status() != WL_CONNECTED) return;
-
-  timeClient.update();
-
-  int h = timeClient.getHours();
-  int m = timeClient.getMinutes();
-
-  int displayTime = h * 100 + m;
-  display.showNumberDecEx(displayTime, 0b01000000, true); // Doppelpunkt blinkt
-
-  delay(500);
+  struct tm timeinfo;
+  if (getLocalTime(&timeinfo)) {
+    int hour = timeinfo.tm_hour;
+    int minute = timeinfo.tm_min;
+    int displayTime = hour * 100 + minute;
+    display.showNumberDecEx(displayTime, 0b01000000, true); // ':' aktivieren
+  }
+  delay(1000);
 }
 

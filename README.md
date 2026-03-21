@@ -43,7 +43,7 @@ Für die Einstellung der WLAN-Daten steht ein WLAN-Manager zur Verfügung. Nachd
   2. Warte bis "TM-Clock" in den WLAN-Verbindungen (Einstellungen, WLAN, Meine Netzwerke)
   3. Verbinde dich mit dem "TM-Clock" WLAN und gebe 192.168.4.1 in der Adresszeile deines Webbrowsers ein (KEINE WEB/GOOGLE SUCHE)
   4. Du solltest jetzt ein Webinterface sehen in dem du den Namen und das Passwort deines Heimnetzwerks eingeben kannst
-  5. Wenn du jetzt "Speichern" drückst, sollte sich deine Cloudya mit deinem Heimnetzwerk verbinden
+  5. Wenn du jetzt "Speichern" drückst, sollte sich deine TM-Clock mit deinem Heimnetzwerk verbinden
   6. Die TM-Clock startet jetzt
 
 

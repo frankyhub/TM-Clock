@@ -29,11 +29,11 @@ Für die Einstellung der WLAN-Daten steht ein WLAN-Manager zur Verfügung. Nachd
 
 ## Montage
 
-### Den ESP32 auf den Gehäusedeckel kleben (Verwende den PIN5x5)
-![pic](/pic/TM1.JPG)
+#### Den ESP32 auf den Gehäusedeckel kleben (Verwende den PIN5x5)
+![pic](/pic/TM1.png)
 
-### Das Display in den Durchbruch kleben (Verwende den PIN-TM)
-![pic](/pic/TM2.JPG)
+#### Das Display in den Durchbruch kleben (Verwende den PIN-TM)
+![pic](/pic/TM2.png)
 
 
 

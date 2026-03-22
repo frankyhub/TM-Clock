@@ -66,6 +66,10 @@ Für die Einstellung der WLAN-Daten steht ein WLAN-Manager zur Verfügung. Nachd
   5. Wenn du jetzt "Speichern" drückst, sollte sich deine TM-Clock mit deinem Heimnetzwerk verbinden
   6. Die TM-Clock startet jetzt
 
+<div style="position:absolute; left:2cm; ">   
+<ol class="breadcrumb" style="border-top: 2px solid black;border-bottom:2px solid black; height: 45px; width: 900px;"> <p align="center"><a href="#oben">nach oben</a></p></ol>
+</div> 
+
 
 
 

@@ -36,6 +36,18 @@ Für die Einstellung der WLAN-Daten steht ein WLAN-Manager zur Verfügung. Nachd
 ![pic](/pic/TM2.png)
 
 
+## Hardware:
+
+| Anzahl | Bezeichnung | 
+| -------- | -------- | 
+| 1        | ESP32vn IoT UNO         |
+| C        | ESP32 Shield        | 
+| E        | TM1637 Display        | 
+| G        | 5V Netzteil        |
+| A        | Schaltdraht        |
+| C        | 3D-Druck Gehäuse        |
+
+
 
   ## Inbetriebnahme:
 

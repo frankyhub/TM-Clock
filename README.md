@@ -47,6 +47,14 @@ Für die Einstellung der WLAN-Daten steht ein WLAN-Manager zur Verfügung. Nachd
 | 1        | Schaltdraht        |
 | 1        | 3D-Druck Gehäuse        |
 
+## Verdrahtung:
+
+| ESP32 | TM1637 | 
+| -------- | -------- | 
+| GPIO 18        | CLK |
+| GPIO 5        | DIO  | 
+| GND        | GND     | 
+| 5V        | 5V       |
 
 
   ## Inbetriebnahme:

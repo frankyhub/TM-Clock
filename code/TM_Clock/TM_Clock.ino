@@ -166,7 +166,7 @@ void setup() {
 }
 
 void loop() {
-  if (WiFi.status() != WL_CONNECTED) return;
+  //if (WiFi.status() != WL_CONNECTED) return;
   struct tm timeinfo;
   if (getLocalTime(&timeinfo)) {
     int hour = timeinfo.tm_hour;

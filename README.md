@@ -57,6 +57,12 @@ Für die Einstellung der WLAN-Daten steht ein WLAN-Manager zur Verfügung. Nachd
 | 5V        | 5V       |
 
 
+## Library
+
+https://github.com/tzapu/WiFiManager
+
+
+
   ## Inbetriebnahme:
 
   1. Versorge deine TM-Clock mit Strom
@@ -65,6 +71,7 @@ Für die Einstellung der WLAN-Daten steht ein WLAN-Manager zur Verfügung. Nachd
   4. Du solltest jetzt ein Webinterface sehen in dem du den Namen und das Passwort deines Heimnetzwerks eingeben kannst
   5. Wenn du jetzt "Speichern" drückst, sollte sich deine TM-Clock mit deinem Heimnetzwerk verbinden
   6. Die TM-Clock startet jetzt
+
 
 <div style="position:absolute; left:2cm; ">   
 <ol class="breadcrumb" style="border-top: 2px solid black;border-bottom:2px solid black; height: 45px; width: 900px;"> <p align="center"><a href="#oben">nach oben</a></p></ol>
